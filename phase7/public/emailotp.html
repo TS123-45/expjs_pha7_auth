@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email OTP Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .message {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    #step2 {
+      margin-top: 1rem;
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Email OTP Login</h2>
+    <!-- Step 1: Email + Password -->
+    <div id="step1">
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <button onclick="generateOtp()">Login & Get OTP</button>
+    </div>
+
+    <!-- Step 2: OTP entry (hidden until step1 succeeds) -->
+    <div id="step2" style="display:none;">
+      <input type="text" id="otp" placeholder="Enter OTP" required>
+      <button onclick="verifyOtp()">Verify OTP</button>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    async function generateOtp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("/login-generate-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email, password })
+      });
+
+      const data = await res.json();
+      document.getElementById("message").innerText = data.message || data.error;
+      if (res.ok) {
+        // Show OTP input after successful login + OTP generation
+        document.getElementById("step2").style.display = "block";
+      }
+    }
+
+    async function verifyOtp() {
+      const email = document.getElementById("email").value;
+      const otp = document.getElementById("otp").value;
+
+      const res = await fetch("/verify-otp-db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email, otp })
+      });
+
+      const data = await res.json();
+      document.getElementById("message").innerText = data.message || data.error;
+    }
+  </script>
+</body>
+</html>

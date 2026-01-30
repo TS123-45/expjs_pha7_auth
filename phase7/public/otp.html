@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OTP Authentication</title>
+</head>
+<body>
+
+<h2>Request OTP</h2>
+<input id="username" placeholder="Username">
+<button onclick="requestOtp()">Request OTP</button>
+
+<h2>Verify OTP</h2>
+<input id="otp" placeholder="Enter OTP">
+<button onclick="verifyOtp()">Verify OTP</button>
+
+<p id="result"></p>
+
+<script>
+function requestOtp() {
+  fetch("/requestotp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: document.getElementById("username").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => result.innerText = data.message);
+}
+
+function verifyOtp() {
+  fetch("/verifyotp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: document.getElementById("username").value,
+      otp: document.getElementById("otp").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => result.innerText = data.message);
+}
+</script>
+
+</body>
+</html>

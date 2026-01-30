@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MFA Login</title>
+</head>
+<body>
+
+<h2>Step 1: Password</h2>
+<input id="username" placeholder="Username"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+<button onclick="passwordLogin()">Verify Password</button>
+
+<h2>Step 2: OTP</h2>
+<input id="otp" placeholder="Enter OTP"><br><br>
+<button onclick="otpLogin()">Verify OTP</button>
+
+<p id="result"></p>
+
+<script>
+function passwordLogin() {
+  fetch("/login-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  })
+  .then(res => res.json())
+  .then(data => result.innerText = data.message);
+}
+
+function otpLogin() {
+  fetch("/login-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: username.value,
+      otp: otp.value
+    })
+  })
+  .then(res => res.json())
+  .then(data => result.innerText = data.message);
+}
+</script>
+
+</body>
+</html>
