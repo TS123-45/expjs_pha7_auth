@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+</head>
+<body>
+
+  <h2>Login</h2>
+
+  <!-- Google Login Button -->
+  <button id="googleLoginBtn">Login with Google</button>
+
+  <hr />
+
+  <button id="profileBtn">Get Profile (JWT Protected)</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    // Google login → redirect to backend
+document.getElementById("googleLoginBtn").addEventListener("click", () => {
+  window.location.href = "/google";
+});
+
+// Example protected API call using JWT
+document.getElementById("profileBtn").addEventListener("click", async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("No JWT found. Please login first.");
+    return;
+  }
+
+  try {
+    const res = await fetch("/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    document.getElementById("output").textContent =
+      JSON.stringify(data, null, 2);
+  } catch (err) {
+    console.error(err);
+  }
+});
+  </script>
+</body>
+</html>

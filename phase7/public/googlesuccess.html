@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login Success</title>
+</head>
+<body>
+
+  <h2>Login Successful</h2>
+  <p>JWT stored. You can now access protected APIs.</p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("token", token);
+      console.log("JWT stored");
+    }
+  </script>
+
+</body>
+</html>
